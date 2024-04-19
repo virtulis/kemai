@@ -1,7 +1,10 @@
 #pragma once
 
+#include <spdlog/spdlog.h>
+
 #include <QComboBox>
 
+#include <QStandardItemModel>
 #include <models/kimaiDataListModel.h>
 #include <models/kimaiDataSortFilterProxyModel.h>
 
@@ -30,7 +33,16 @@ public:
             // Save which item was selected before the model reset
             current = currentData();
         }
-        mModel.setKimaiData(kds);
+        mModel.clear();
+        mModel.setColumnCount(1);
+        addItem("", QVariant(0));
+        if (!kds.empty())
+        {
+            for (const auto& kd : kds)
+            {
+                addItem(kd.name, QVariant(kd.id));
+            }
+        }
         if (!current.isNull())
         {
             // Find the item with a matching ID and make it current again
@@ -46,7 +58,7 @@ public:
 
 private:
     bool mModelSet = false;
-    KimaiDataListModel mModel;
+    QStandardItemModel mModel;
     KimaiDataSortFilterProxyModel mProxyModel;
 };
 

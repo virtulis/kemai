@@ -7,7 +7,7 @@ using namespace kemai;
 class kemai::AutoCompleteValidator : public QValidator
 {
 public:
-    explicit AutoCompleteValidator(KimaiDataListModel* model) : mModel(model) {}
+    explicit AutoCompleteValidator(QStandardItemModel* model) : mModel(model) {}
     ~AutoCompleteValidator() override = default;
 
     QValidator::State validate(QString& input, int& /*pos*/) const override
@@ -21,7 +21,7 @@ public:
 
         for (auto i = 0; i < nRows; ++i)
         {
-            auto str = mModel->data(mModel->index(i), Qt::DisplayRole).toString();
+            auto str = mModel->data(mModel->index(i, 0), Qt::DisplayRole).toString();
             if (str == input)
             {
                 return Acceptable;
@@ -38,7 +38,7 @@ public:
     void fixup(QString& input) const override { input.clear(); }
 
 private:
-    KimaiDataListModel* mModel;
+    QStandardItemModel* mModel;
 };
 
 AutoCompleteComboBox::AutoCompleteComboBox(QWidget* parent) : QComboBox(parent)
